@@ -8,11 +8,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var falseButton: UIButton!
     
     let quiz = [
-    ["A byte has 8 bits", "True"],
-    ["The process of starting or restarting a computer is called 'Booting'", "True"],
-    ["CPU means Crucial Processing Unit", "False"],
-    ["Processor is a component of the Mobo", "True"],
-    ]
+    Question(q: "A byte has 8 bits", a: "True"),
+    Question(q: "The process of starting or restarting a computer is called 'Booting", a: "True"),
+    Question(q: "CPU means Crucial Processing Unit", a: "False"),
+    Question(q: "Processor is a component of the Mobo", a: "True"),
+ ]
     
     var questionNumber = 0
     
@@ -22,13 +22,14 @@ class ViewController: UIViewController {
     }
 
     @IBAction func answerButtonPressed(_ sender: UIButton) {
+
         let userAnswer = sender.currentTitle
-        let actualAnswer = quiz[questionNumber][1]
+        let actualAnswer = quiz[questionNumber].answer
         
         if userAnswer == actualAnswer {
-            print("Right!")
+            sender.backgroundColor = UIColor.green
         } else {
-            print("Wrong!")
+            sender.backgroundColor = UIColor.red
         }
         
         if questionNumber + 1 < quiz.count {
@@ -37,12 +38,14 @@ class ViewController: UIViewController {
             questionNumber = 0
         }
         
-        questionNumber += 1
-        updateUI()
+        Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
     }
     
-    func updateUI() {
-        questionLabel.text = quiz[questionNumber][0]
+    @objc func updateUI() {
+        questionLabel.text = quiz[questionNumber].text
+        trueButton.backgroundColor = UIColor.clear
+        falseButton.backgroundColor = UIColor.clear
+        progressBar.progress = Float(questionNumber + 1) / Float(quiz.count)
     }
 }
 
